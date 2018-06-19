@@ -20,9 +20,11 @@ echo                                 SETUP OH-MY-ZSH
 echo                                  SETUP .zshrc
 # =============================================================================
 
-curl -m 5 -L https://raw.githubusercontent.com/mmore500/shell-config/master/init.zsh > ~/.zshrc.remote || echo "curl timeout" && echo "fail" > ~/.zshrc.remote
+curl -m 5 -L https://raw.githubusercontent.com/mmore500/shell-config/master/init.zsh > ~/.zshrc.remote || echo "curl timeout" && rm -f ~/.zshrc.remote
 
-cmp ~/.zshrc ~/.zshrc.remote || cp ~/.zshrc.remote ~/.zshrc && source ~/.zshrc
+if [ -f ~/.zshrc.remote ]; then
+  cmp ~/.zshrc ~/.zshrc.remote || cp ~/.zshrc.remote ~/.zshrc && source ~/.zshrc
+fi
 
 rm -f ~/.zshrc.remote && "cleaned up temp .zshrc.remote"
 
