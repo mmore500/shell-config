@@ -32,7 +32,7 @@ rm -f ~/.zshrc.remote && "cleaned up temp .zshrc.remote"
 echo                                  SETUP DOTFILES
 # =============================================================================
 
-for file in ~/.shell-config/dotfiles/*; do ln -sfn $(basename $file); done
+for file in ~/.shell-config/dotfiles/.*; do ln -sfn $(basename $file); done
 
 # =============================================================================
 echo                                   ALL CONFIGS
