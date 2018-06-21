@@ -60,9 +60,9 @@ zplug "plugins/systemd",           from:oh-my-zsh, if:"whence systemctl"
 zplug "plugins/docker",            from:oh-my-zsh, if:"whence docker"
 zplug "plugins/docker-compose",    from:oh-my-zsh, if:"whence docker-compose"
 
-zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
-zplug "junegunn/fzf", use:"shell/*.zsh", as:plugin
-zplug "andrewferrier/fzf-z"
+#zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
+#zplug "junegunn/fzf", use:"shell/*.zsh", as:plugin
+#zplug "andrewferrier/fzf-z"
 
 # Enhanced cd
 zplug "b4b4r07/enhancd", use:init.sh
