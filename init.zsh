@@ -26,7 +26,7 @@ if [ -f ~/.zshrc.remote ]; then
   cmp ~/.zshrc ~/.zshrc.remote || cp ~/.zshrc.remote ~/.zshrc && source ~/.zshrc
 fi
 
-rm -f ~/.zshrc.remote && "cleaned up temp .zshrc.remote"
+rm -f ~/.zshrc.remote && echo "cleaned up temp .zshrc.remote"
 
 # =============================================================================
 echo                                  SETUP DOTFILES
