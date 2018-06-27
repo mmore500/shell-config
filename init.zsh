@@ -40,6 +40,10 @@ echo                                   ALL CONFIGS
 
 for file in ~/.shell-config/configs/*.zsh; do source $file; done
 
+if [ -f ~/.zshrc.local ]; then
+  source ~/.zshrc.local
+fi
+
 echo "DONE!"
 
 clear
