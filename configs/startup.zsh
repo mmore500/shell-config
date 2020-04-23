@@ -2,7 +2,9 @@
 echo                                   Startup
 # =============================================================================
 
-# Load SSH and GPG agents via keychain.
+# =============================================================================
+echo '   Load SSH and GPG agents via keychain.'
+# =============================================================================
 setup_agents() {
   [[ $UID -eq 0 ]] && return
 
@@ -21,7 +23,9 @@ setup_agents() {
 setup_agents
 unfunction setup_agents
 
-# Install plugins if there are plugins that have not been installed
+# =============================================================================
+echo '   Install plugins if there are plugins that have not been installed'
+# =============================================================================
 if ! zplug check; then
     printf "Install plugins? [y/N]: "
     if read -q; then
@@ -29,15 +33,23 @@ if ! zplug check; then
     fi
 fi
 
-# Then, source plugins and add commands to $PATH
+# =============================================================================
+echo '   Then, source plugins and add commands to $PATH'
+# =============================================================================
 zplug load
 
+# =============================================================================
+echo '      seebi/dircolors-solarized'
+# =============================================================================
 if zplug check "seebi/dircolors-solarized"; then
   which gdircolors &> /dev/null && alias dircolors='() { $(whence -p gdircolors) }'
   which dircolors &> /dev/null && \
 	  eval $(dircolors ~/.zplug/repos/seebi/dircolors-solarized/dircolors.256dark)
 fi
 
+# =============================================================================
+echo '      zsh-users/zsh-history-substring-search'
+# =============================================================================
 if zplug check "zsh-users/zsh-history-substring-search"; then
 	zmodload zsh/terminfo
 	bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -46,6 +58,9 @@ if zplug check "zsh-users/zsh-history-substring-search"; then
 	bindkey "^[[1;5B" history-substring-search-down
 fi
 
+# =============================================================================
+echo '      zsh-users/zsh-syntax-highlighting'
+# =============================================================================
 if zplug check "zsh-users/zsh-syntax-highlighting"; then
 	#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
@@ -70,11 +85,17 @@ if zplug check "zsh-users/zsh-syntax-highlighting"; then
 	ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
 fi
 
+# =============================================================================
+echo '      b4b4r07/enhancd'
+# =============================================================================
 if zplug check "b4b4r07/enhancd"; then
     ENHANCD_FILTER="fzf --height 50% --reverse --ansi"
     ENHANCD_DOT_SHOW_FULLPATH=1
 fi
 
+# =============================================================================
+echo '      b4b4r07/zsh-history-enhanced'
+# =============================================================================
 if zplug check "b4b4r07/zsh-history-enhanced"; then
 	ZSH_HISTORY_FILE="$HISTFILE"
     ZSH_HISTORY_FILTER="fzf:peco:percol"
@@ -82,6 +103,9 @@ if zplug check "b4b4r07/zsh-history-enhanced"; then
     ZSH_HISTORY_KEYBIND_GET_ALL="^r^a"
 fi
 
+# =============================================================================
+echo '      bhilburn/powerlevel9k'
+# =============================================================================
 if zplug check "bhilburn/powerlevel9k"; then
     # Easily switch primary foreground/background colors
     DEFAULT_FOREGROUND=004 DEFAULT_BACKGROUND=015
@@ -230,12 +254,19 @@ if zplug check "bhilburn/powerlevel9k"; then
     POWERLEVEL9K_BATTERY_DISCONNECTED_BACKGROUND="$DEFAULT_BACKGROUND"
 fi
 
+# =============================================================================
+echo '   Add "$HOME/bin" to path.'
+# =============================================================================
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
 
-# Source local zsh customizations.
+# =============================================================================
+echo '   Source local zsh customizations.'
+# =============================================================================
 [[ -f ~/.zsh_rclocal ]] && source ~/.zsh_rclocal
 
-# Source functions and aliases.
+# =============================================================================
+echo '   Source functions and aliases.'
+# =============================================================================
 [[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
 [[ -f ~/.zsh_exports ]] && source ~/.zsh_exports
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
