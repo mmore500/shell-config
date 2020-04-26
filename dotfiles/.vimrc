@@ -37,6 +37,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'airblade/vim-gitgutter'
 
+Plug 'kamykn/spelunker.vim'
+
 call plug#end()
 
 autocmd vimenter * NERDTree
