@@ -1,5 +1,10 @@
 [user]
-	email = mmore500.login+git@gmail.com
+	email = mmore500.login+gpg@gmail.com
 	name = Matthew Andres Moreno
+	signingkey = 0x4C80129901C855AA
 [core]
 	editor = vim
+[commit]
+	gpgSign = true
+[init]
+	defaultBranch = master
