@@ -3,6 +3,14 @@ set showtabline=2 " Always display the tabline, even if there is only one tab
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 set showcmd " show commands as typed
 
+" line jumper
+" https://stackoverflow.com/a/27206531
+execute "set <M-j>=\<ESC>j"
+noremap <M-j> 10j
+execute "set <M-k>=\<ESC>k"
+noremap <M-k> 10k
+map <A-Down> 10j
+map <A-Up> 10k
 
 call plug#begin('~/.vim/plugged')
 
