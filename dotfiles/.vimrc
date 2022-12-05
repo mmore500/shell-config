@@ -3,21 +3,6 @@ set showtabline=2 " Always display the tabline, even if there is only one tab
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 set showcmd " show commands as typed
 
-" tabstop:          Width of tab character
-" softtabstop:      Fine tunes the amount of white space to be added
-" shiftwidth        Determines the amount of whitespace to add in normal mode
-" expandtab:        When this option is enabled, vi will use spaces instead of tabs
-set tabstop     =2
-set softtabstop =2
-set shiftwidth  =2
-
-set expandtab
-
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
 
 call plug#begin('~/.vim/plugged')
 
