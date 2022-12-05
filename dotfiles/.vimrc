@@ -21,6 +21,8 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'tpope/vim-fugitive'
+
 Plug 'vim-airline/vim-airline'
 
 Plug 'terryma/vim-multiple-cursors'
@@ -29,19 +31,95 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 Plug 'arcticicestudio/nord-vim'
 
-Plug 'preservim/nerdtree'
-
-Plug 'Xuyuanp/nerdtree-git-plugin'
-
-" Plug 'mhinz/vim-signify'
-
 Plug 'airblade/vim-gitgutter'
+
+Plug 'mmore500/nerdtree'
+
+Plug 'mmore500/nerdtree-git-plugin'
 
 Plug 'kamykn/spelunker.vim'
 
+" Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 
-autocmd vimenter * NERDTree
+let g:spelunker_check_type = 2
+
+" https://yous.be/2014/11/30/automatically-quit-vim-if-actual-files-are-closed/
+function! CheckLeftBuffers()
+  if tabpagenr('$') == 1
+    let i = 1
+    while i <= winnr('$')
+      if getbufvar(winbufnr(i), '&buftype') == 'help' ||
+          \ getbufvar(winbufnr(i), '&buftype') == 'quickfix' ||
+          \ exists('t:NERDTreeBufName') &&
+          \   bufname(winbufnr(i)) == t:NERDTreeBufName ||
+          \ bufname(winbufnr(i)) == '__Tag_List__'
+        let i += 1
+      else
+        break
+      endif
+    endwhile
+    if i == winnr('$') + 1
+      qall
+    endif
+    unlet i
+  endif
+endfunction
+autocmd BufEnter * call CheckLeftBuffers()
+
+autocmd vimenter * NERDTree | wincmd p
+
+set encoding=UTF-8
+
+" let NERDTreeMinimalUI = 1
+" let NERDTreeDirArrows = 1
+
+" let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+" let g:DevIconsEnableFoldersOpenClose = 1
+
+"let g:NERDTreeShowIgnoredStatus = 1  "enables ignored highlighting
+let g:NERDTreeGitStatusNodeColorization = 1  "enables colorization
+"let g:NERDTreeGitStatusWithFlags = 1  "enables flags, (may be default), required for colorization
+
+"highlight link NERDTreeDir Question  "custom color
+"highlight link NERDTreeGitStatusIgnored Comment  "custom color
+"highlight link NERDTreeGitStatusModified cssURL  "custom color
+
+" NERDTree
+"set hidden
+"let g:NERDTreeDirArrowExpandable = nr2char(8200)  "sets expandable character
+"let g:NERDTreeDirArrowCollapsible = nr2char(8200)  "sets collapsible character
+"let g:WebDevIconsNerdTreeAfterGlyphPadding = ''  "removes padding after devicon glyph
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1  "enables decorating folder nodes
+
+"autocmd FileType nerdtree setlocal nolist  "if you show hidden characters, this hides them in NERDTree
+"let g:NERDTreeIndicatorMapCustom = {
+"    \ "Modified"  : "░",
+"    \ "Staged"    : ">",
+"    \ "Untracked" : "_",
+"    \ "Renamed"   : "▁",
+"    \ "Unmerged"  : "X",
+"    \ "Deleted"   : "",
+"    \ "Dirty"     : "░",
+"    \ "Clean"     : "  ",
+"    \ 'Ignored'   : '/',
+"    \ "Unknown"   : "?"
+"    \ }
+
+
+ let g:NERDTreeGitStatusIndicatorMapCustom = {
+    \ "Modified"  : "█⫶",
+    \ "Staged"    : ">>",
+    \ "Untracked" : "█|",
+    \ "Renamed"   : "█▁",
+    \ "Unmerged"  : "XX",
+    \ "Deleted"   : "██",
+    \ "Dirty"     : "█░",
+    \ "Clean"     : "█ ",
+    \ "Ignored"   : "//",
+    \ "Unknown"   : "??"
+    \ }
 
 let g:multi_cursor_use_default_mapping=0
 
@@ -55,12 +133,6 @@ let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
 
-let g:signify_realtime = 1
-
-"let g:signify_sign_add              = '█+'
-"let g:signify_sign_change           = '█>'
-"let g:signify_sign_delete            = '█_'
-"let g:signify_sign_delete_first_line = '█^'
 let g:gitgutter_sign_added = '█|'
 let g:gitgutter_sign_modified = '█⫶'
 let g:gitgutter_sign_removed = '█▁'
