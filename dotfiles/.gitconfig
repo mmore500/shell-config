@@ -8,3 +8,5 @@
 	gpgSign = true
 [init]
 	defaultBranch = master
+[url "https://"]
+	insteadOf = git://
