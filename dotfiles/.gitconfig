@@ -10,3 +10,5 @@
 	defaultBranch = master
 [url "https://"]
 	insteadOf = git://
+[safe]
+	directory = *
