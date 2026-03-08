@@ -37,6 +37,7 @@ alias egrep='() { $(whence -p egrep) --color=auto $@ }'
 # Custom helper aliases
 alias ccat='highlight -O ansi'
 alias rm='rm -v'
+alias clauded='claude --dangerously-skip-permissions'
 
 # Directory management
 alias la='ls -a'
