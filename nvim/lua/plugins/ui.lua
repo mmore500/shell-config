@@ -2,6 +2,36 @@ return {
   -- Icons (requires BlexMono Nerd Font — already installed)
   { "nvim-tree/nvim-web-devicons" },
 
+  -- Buffer tab bar across the top (like VSCode's tab strip)
+  {
+    "akinsho/bufferline.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("bufferline").setup({
+        options = {
+          mode            = "buffers",
+          separator_style = "slant",
+          show_close_icon = false,
+          show_buffer_close_icons = false,
+          diagnostics     = "nvim_lsp",
+          offsets = {
+            {
+              filetype   = "neo-tree",
+              text       = "Files",
+              highlight  = "Directory",
+              separator  = true,
+            },
+          },
+        },
+      })
+      -- Wire ]b / [b through bufferline for consistent cycling
+      vim.keymap.set("n", "]b", "<cmd>BufferLineCycleNext<cr>", { noremap = true, silent = true })
+      vim.keymap.set("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { noremap = true, silent = true })
+      -- Close current buffer
+      vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { noremap = true, silent = true })
+    end,
+  },
+
   -- File tree: sidebar toggle (VSCode: ctrl+\ → toggleSidebarVisibility)
   {
     "nvim-neo-tree/neo-tree.nvim",
