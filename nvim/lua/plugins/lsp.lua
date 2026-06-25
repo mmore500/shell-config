@@ -72,7 +72,6 @@ return {
           "rust_analyzer", -- Rust
           "zls",           -- Zig
           "yamlls",        -- YAML
-          "cmake",         -- CMake
         },
         -- automatic_enable calls vim.lsp.enable() for each installed server
         automatic_enable = true,

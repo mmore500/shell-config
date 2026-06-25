@@ -3,17 +3,11 @@ return {
   {
     "maxmx03/solarized.nvim",
     priority = 1000,
-    opts = {
-      transparent = false,
-      styles = {
-        comments = {},
-        keywords = {},
-        functions = {},
-      },
-    },
-    config = function(_, opts)
+    config = function()
       vim.o.background = "light"
-      require("solarized").setup(opts)
+      require("solarized").setup({
+        transparent = { enabled = false },
+      })
       vim.cmd.colorscheme("solarized")
     end,
   },
