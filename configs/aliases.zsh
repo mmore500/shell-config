@@ -26,8 +26,10 @@ fi
 # Set editor preference to nvim if available.
 if which nvim &>/dev/null; then
 	alias vim='() { $(whence -p nvim) $@ }'
+	alias vi='() { $(whence -p nvim) $@ }'
 else
 	alias vim='() { $(whence -p vim) $@ }'
+	alias vi='() { $(whence -p vim) $@ }'
 fi
 
 # Generic command adaptations
