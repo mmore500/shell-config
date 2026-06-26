@@ -5,6 +5,7 @@ dotfiles/.gnupg/private-keys-v1.d/
 
 # GPG runtime/generated files
 dotfiles/.gnupg/.#*
+dotfiles/.gnupg/pubring.kbx
 dotfiles/.gnupg/crls.d/
 dotfiles/.gnupg/*.kbx~
 dotfiles/.gnupg/reader_*.status
