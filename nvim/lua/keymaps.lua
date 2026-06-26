@@ -77,8 +77,13 @@ map("i",          "<C-e>", "<End>",     o)
 map("n",          "<C-d>", '"_x',       o)  -- delete char under cursor (no yank)
 map("i",          "<C-d>", "<Delete>",  o)  -- delete char forward
 
--- Ctrl+S → save
-map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", o)
+-- Ctrl+S → save; Ctrl+Shift+S → save as (VSCode: workbench.action.files.saveAs)
+map({ "n", "i", "v" }, "<C-s>",   "<cmd>w<cr>", o)
+map({ "n", "i", "v" }, "<C-S-s>", function()
+  vim.ui.input({ prompt = "Save as: ", default = vim.fn.expand("%") }, function(name)
+    if name and name ~= "" then vim.cmd("saveas " .. vim.fn.fnameescape(name)) end
+  end)
+end, o)
 
 -- Ctrl+Z / Ctrl+Shift+Z → undo/redo
 map({ "n", "i" }, "<C-z>",   "<cmd>undo<cr>", o)
@@ -142,11 +147,9 @@ map("n", "<C-\\>", "<cmd>Neotree toggle<cr>", o)
 map("n", "<M-\\>", "<cmd>Neotree focus<cr>",  o)
 
 -- ── Fuzzy finder (VSCode: ctrl+p → quick open, ctrl+f → find in file, ctrl+shift+f → find in project) ─
--- Note: most terminals cannot distinguish <C-S-f> from <C-f>; use <leader>fg as universal fallback.
-map("n", "<C-p>",      "<cmd>Telescope find_files<cr>",             o)  -- quick open
-map("n", "<C-f>",      "<cmd>Telescope current_buffer_fuzzy_find<cr>", o)  -- find in file (VSCode ctrl+f)
-map("n", "<C-f><C-f>", "<cmd>Telescope live_grep<cr>",              o)  -- find in project (double ctrl+f)
-map("n", "<C-S-f>",    "<cmd>Telescope live_grep<cr>",              o)  -- find in project (extended kbd protocol only)
+map("n", "<C-p>",   "<cmd>Telescope find_files<cr>",                o)  -- quick open
+map("n", "<C-f>",   "<cmd>Telescope current_buffer_fuzzy_find<cr>", o)  -- find in file (VSCode ctrl+f)
+map("n", "<C-S-f>", "<cmd>Telescope live_grep<cr>",                 o)  -- find in project
 map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",              o)  -- find in project (universal)
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",                o)
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",              o)
