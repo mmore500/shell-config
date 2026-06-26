@@ -61,6 +61,16 @@ return {
           documentation = cmp.config.window.bordered(),
         },
       })
+
+      -- In tex files, suppress completion unless the current word contains ':'
+      cmp.setup.filetype({ "tex", "latex", "plaintex" }, {
+        enabled = function()
+          local line = vim.api.nvim_get_current_line()
+          local col  = vim.api.nvim_win_get_cursor(0)[2]
+          local word = line:sub(1, col):match("[%S]+$") or ""
+          return word:find(":") ~= nil
+        end,
+      })
     end,
   },
 }
