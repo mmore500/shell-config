@@ -69,6 +69,14 @@ map("n", "<M-S-j>", "<cmd>move .+1<cr>==", o)
 map("v", "<M-S-k>", ":move '<-2<cr>gv=gv", o)
 map("v", "<M-S-j>", ":move '>+1<cr>gv=gv", o)
 
+-- Shell-style line editing (emacs keys)
+map({ "n", "v" }, "<C-a>", "^",         o)  -- beginning of line
+map("i",          "<C-a>", "<Home>",    o)
+map({ "n", "v" }, "<C-e>", "$",         o)  -- end of line
+map("i",          "<C-e>", "<End>",     o)
+map("n",          "<C-d>", '"_x',       o)  -- delete char under cursor (no yank)
+map("i",          "<C-d>", "<Delete>",  o)  -- delete char forward
+
 -- Ctrl+S → save
 map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", o)
 
