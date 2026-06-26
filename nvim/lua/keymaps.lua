@@ -158,11 +158,42 @@ map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",              o)
 map("n", "<C-h>", "<C-w>h", o)
 map("n", "<C-j>", "<C-w>j", o)
 map("n", "<C-k>", "<C-w>k", o)
-map("n", "<C-l>", "<C-w>l", o)
+-- <C-l> repurposed for select-line (VSCode Ctrl+L); use <M-t><Right> for window right
+
+-- ── More VSCode-style bindings ────────────────────────────────────────────────
+-- Ctrl+L → select whole line, extend by one line on repeat (VSCode: expandLineSelection)
+map("n", "<C-l>", "V",       o)
+map("v", "<C-l>", "j",       o)
+map("i", "<C-l>", "<C-o>V",  o)
+
+-- Ctrl+/ → toggle line comment (VSCode: editor.action.commentLine)
+-- Terminals send Ctrl+/ as <C-_> (ASCII 31)
+map("n", "<C-_>", function() require("Comment.api").toggle.linewise.current() end, o)
+map("v", "<C-_>", function()
+  local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+  vim.api.nvim_feedkeys(esc, "nx", false)
+  require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end, o)
+
+-- Ctrl+G → go to line (VSCode: workbench.action.gotoLine)
+map("n", "<C-g>", function()
+  vim.ui.input({ prompt = "Go to line: " }, function(input)
+    if input and input ~= "" then vim.cmd(input) end
+  end)
+end, o)
+
+-- Ctrl+Shift+A → select all (VSCode: editor.action.selectAll)
+map("n", "<C-S-a>", "ggVG",          o)
+map("i", "<C-S-a>", "<C-o>gg<C-o>VG", o)
+
+-- Ctrl+Enter → insert new line below, stay in insert (VSCode: editor.action.insertLineAfter)
+map("n", "<C-CR>", "o",         o)
+map("i", "<C-CR>", "<End><CR>", o)
 
 -- ── Misc ──────────────────────────────────────────────────────────────────────
--- Clear search highlight
+-- Clear search highlight; also explicitly exit visual/visual-line/visual-block
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", o)
+map("x", "<Esc>", "<Esc>",               o)
 
 -- Jump to matching bracket (VSCode: ctrl+m → jumpToBracket)
 -- Note: <C-m> = Enter in terminals, so use <leader>m
