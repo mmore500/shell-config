@@ -48,6 +48,12 @@ map("n", "<M-S-Down>", "v10j", o)
 map("v", "<M-S-Up>",   "10k",  o)
 map("v", "<M-S-Down>", "10j",  o)
 
+-- Alt+T then Arrow → move between panes
+map("n", "<M-t><Left>",  "<C-w>h", o)
+map("n", "<M-t><Right>", "<C-w>l", o)
+map("n", "<M-t><Up>",    "<C-w>k", o)
+map("n", "<M-t><Down>",  "<C-w>j", o)
+
 -- ── Editing ───────────────────────────────────────────────────────────────────
 -- Ctrl+Shift+X → delete line (VSCode: editor.action.deleteLines)
 map("n", "<C-S-x>", "dd",             o)
