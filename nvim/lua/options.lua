@@ -10,11 +10,11 @@ opt.shiftwidth = 4
 opt.expandtab = true
 opt.smartindent = true
 
--- Word wrap at 80 (editor.wordWrap: "bounded", rewrap.wrappingColumn: 80)
+-- Soft wrap: visual wrapping only, no hard newlines inserted
 opt.wrap = true
-opt.linebreak = true
-opt.textwidth = 80
-opt.colorcolumn = "80"
+opt.linebreak = true      -- break at word boundaries, not mid-word
+opt.textwidth = 0         -- disable hard wrapping
+opt.colorcolumn = "80"    -- keep the 80-col ruler as a visual guide
 
 -- Show all whitespace (editor.renderWhitespace: "all")
 opt.list = true
@@ -57,6 +57,11 @@ opt.clipboard = "unnamedplus"
 
 -- Completion menu
 opt.completeopt = { "menu", "menuone", "noselect" }
+
+-- Remove 't' from formatoptions so typing never auto-inserts hard line breaks
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function() vim.opt_local.formatoptions:remove("t") end,
+})
 
 -- Spelling (enabled per-filetype in autocmds)
 opt.spelllang = "en_us"

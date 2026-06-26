@@ -40,6 +40,16 @@ autocmd("FileType", {
   end,
 })
 
+-- No 80-col ruler for prose/bib files
+augroup("NoColorColumn", { clear = true })
+autocmd("FileType", {
+  group = "NoColorColumn",
+  pattern = { "markdown", "tex", "bib" },
+  callback = function()
+    vim.opt_local.colorcolumn = ""
+  end,
+})
+
 -- Python-specific settings (editor.tabSize: 4, editor.insertSpaces: true)
 augroup("PythonSettings", { clear = true })
 autocmd("FileType", {
