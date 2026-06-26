@@ -127,11 +127,15 @@ map("i", "<C-S-;>", "<C-o>z=", o)
 map("n", "<C-\\>", "<cmd>Neotree toggle<cr>", o)
 map("n", "<M-\\>", "<cmd>Neotree focus<cr>",  o)
 
--- ── Fuzzy finder (VSCode: ctrl+p → quick open) ───────────────────────────────
-map("n", "<C-p>",      "<cmd>Telescope find_files<cr>", o)
-map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",  o)
-map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",    o)
-map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",  o)
+-- ── Fuzzy finder (VSCode: ctrl+p → quick open, ctrl+f → find in file, ctrl+shift+f → find in project) ─
+-- Note: most terminals cannot distinguish <C-S-f> from <C-f>; use <leader>fg as universal fallback.
+map("n", "<C-p>",      "<cmd>Telescope find_files<cr>",             o)  -- quick open
+map("n", "<C-f>",      "<cmd>Telescope current_buffer_fuzzy_find<cr>", o)  -- find in file (VSCode ctrl+f)
+map("n", "<C-f><C-f>", "<cmd>Telescope live_grep<cr>",              o)  -- find in project (double ctrl+f)
+map("n", "<C-S-f>",    "<cmd>Telescope live_grep<cr>",              o)  -- find in project (extended kbd protocol only)
+map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",              o)  -- find in project (universal)
+map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",                o)
+map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",              o)
 
 -- ── Window navigation ─────────────────────────────────────────────────────────
 map("n", "<C-h>", "<C-w>h", o)
