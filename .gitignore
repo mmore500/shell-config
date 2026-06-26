@@ -1,1 +1,16 @@
 kitty/current-theme.conf
+
+# GPG private keys — never commit
+dotfiles/.gnupg/private-keys-v1.d/
+
+# GPG runtime/generated files
+dotfiles/.gnupg/.#*
+dotfiles/.gnupg/crls.d/
+dotfiles/.gnupg/*.kbx~
+dotfiles/.gnupg/reader_*.status
+dotfiles/.gnupg/sshcontrol
+dotfiles/.gnupg/trustdb.gpg
+
+# SSH machine-specific files
+dotfiles/.ssh/known_hosts
+dotfiles/.ssh/known_hosts.old
