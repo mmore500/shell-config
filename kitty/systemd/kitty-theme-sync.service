@@ -1,0 +1,10 @@
+[Unit]
+Description=Sync kitty theme with GNOME color scheme
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c '/usr/bin/gsettings monitor org.gnome.desktop.interface | while IFS= read -r line; do echo "$line" | grep -q color-scheme && /home/mmore500/.local/bin/kitty-theme-sync; done'
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

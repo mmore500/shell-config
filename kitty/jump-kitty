@@ -1,0 +1,27 @@
+#!/bin/bash
+windows_json=$(gdbus call --session \
+    --dest org.gnome.Shell \
+    --object-path /org/gnome/Shell/Extensions/Windows \
+    --method org.gnome.Shell.Extensions.Windows.List 2>/dev/null)
+
+kitty_id=$(echo "$windows_json" | python3 -c "
+import sys, json, re
+raw = sys.stdin.read()
+match = re.search(r'\[.*\]', raw, re.DOTALL)
+if match:
+    windows = json.loads(match.group(0))
+    for w in windows:
+        if w.get('wm_class', '').lower() == 'kitty' or w.get('wm_class_instance', '').lower() == 'kitty':
+            print(w['id'])
+            break
+")
+
+if [ -n "$kitty_id" ]; then
+    gdbus call --session \
+        --dest org.gnome.Shell \
+        --object-path /org/gnome/Shell/Extensions/Windows \
+        --method org.gnome.Shell.Extensions.Windows.Activate \
+        "$kitty_id"
+else
+    kitty &
+fi

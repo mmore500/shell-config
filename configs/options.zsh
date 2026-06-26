@@ -1,8 +1,6 @@
 # =============================================================================
 echo                                   Options
 # =============================================================================
-export TERM="xterm-256color"
-
 # improved less option
 export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
