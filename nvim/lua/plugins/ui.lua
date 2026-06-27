@@ -59,6 +59,15 @@ return {
           },
           follow_current_file = { enabled = true },
           commands = {
+            focus_main_buffer = function(_state)
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                local buf = vim.api.nvim_win_get_buf(win)
+                if vim.api.nvim_get_option_value("filetype", { buf = buf }) ~= "neo-tree" then
+                  vim.api.nvim_set_current_win(win)
+                  return
+                end
+              end
+            end,
             scroll_tree_right = function(_state)
               local v = vim.fn.winsaveview()
               v.leftcol = v.leftcol + 6
@@ -178,6 +187,7 @@ return {
               ["<ScrollWheelRight>"] = "scroll_tree_right",
               ["<ScrollWheelLeft>"]  = "scroll_tree_left",
               ["<RightMouse>"]       = "show_context_menu",
+              ["<M-\\>"]             = "focus_main_buffer",
             },
           },
         },
