@@ -83,9 +83,11 @@ map("i", "<C-v>", '<C-r>"', o)
 map("n", "<C-S-x>", "dd",             o)
 map("i", "<C-S-x>", "<C-o>dd",        o)
 
--- Ctrl+Shift+D → duplicate line down (VSCode: editor.action.copyLinesDownAction)
-map("n", "<C-S-d>", "yyp",            o)
-map("i", "<C-S-d>", "<C-o>yy<C-o>p", o)
+-- Ctrl+Shift+D → word select / add next occurrence (alias for Alt+D / vim-visual-multi)
+-- feedkeys through <M-d> so vm's own map fires; avoids Plug autoload timing issues.
+map({ "n", "v" }, "<C-S-d>", function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<M-d>", true, false, true), "m", false)
+end, o)
 
 -- Move lines up/down (VSCode: cmd+pageup/pagedown → editor.action.moveLinesUp/Down)
 map("n", "<M-S-k>", "<cmd>move .-2<cr>==", o)
@@ -113,9 +115,41 @@ end, o)
 map({ "n", "i" }, "<C-z>",   "<cmd>undo<cr>", o)
 map({ "n", "i" }, "<C-S-z>", "<cmd>redo<cr>", o)
 
--- Ctrl+W → close buffer (VSCode: workbench.action.closeActiveEditor)
--- Overrides vim's <C-w> window prefix; window movement is already on <C-h/j/k/l>
-map("n", "<C-w>", "<cmd>bdelete<cr>", o)
+-- Ctrl+W → close buffer without closing windows/neovim (VSCode: closeActiveEditor)
+-- bdelete alone closes all windows showing the buffer; this re-homes them first.
+map("n", "<C-w>", function()
+  local cur = vim.api.nvim_get_current_buf()
+  local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+  local next_buf
+  for _, b in ipairs(bufs) do
+    if b.bufnr ~= cur then next_buf = b.bufnr; break end
+  end
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_buf(win) == cur then
+      if next_buf then
+        vim.api.nvim_win_set_buf(win, next_buf)
+      else
+        vim.api.nvim_win_set_buf(win, vim.api.nvim_create_buf(true, false))
+      end
+    end
+  end
+  pcall(vim.cmd, "bdelete " .. cur)
+end, o)
+
+-- Ctrl+Shift+L → duplicate line down (VSCode: editor.action.copyLinesDownAction)
+local function dup_line()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_buf_set_lines(0, row, row, false, { vim.api.nvim_get_current_line() })
+end
+map("n", "<C-S-l>", dup_line, o)
+map("i", "<C-S-l>", function()
+  dup_line()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  vim.api.nvim_win_set_cursor(0, { pos[1] + 1, pos[2] })
+end, o)
+
+-- Backspace → delete selection without clobbering clipboard (VSCode: backspace in visual)
+map("v", "<BS>", '"_d', o)
 
 -- Indent / outdent in visual (VSCode: ctrl+]/[)
 map("v", "<C-]>", ">gv", o)

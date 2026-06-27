@@ -57,6 +57,35 @@ return {
     end,
   },
 
+  -- Session restore: auto-save/restore per working directory
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    config = function()
+      require("auto-session").setup({
+        auto_save_enabled = true,
+        auto_restore_enabled = true,
+        -- Don't restore sessions for home/root/tmp (too broad)
+        auto_session_suppress_dirs = { "~/", "/", "/tmp" },
+        -- Close Neotree before saving so it doesn't pollute the session
+        pre_save_cmds = { "Neotree close" },
+      })
+    end,
+  },
+
+  -- Multicursor: Alt+D → select word / add next occurrence (VSCode Ctrl+D)
+  {
+    "mg979/vim-visual-multi",
+    branch = "master",
+    init = function()
+      vim.g.VM_maps = {
+        ["Find Under"]         = "<M-d>",
+        ["Find Subword Under"] = "<M-d>",
+      }
+      vim.g.VM_default_mappings = 0
+    end,
+  },
+
   -- Rainbow CSV (mechatroner.rainbow-csv — same plugin, vim-compatible)
   {
     "mechatroner/rainbow_csv",
