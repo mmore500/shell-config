@@ -63,6 +63,128 @@ return {
             hide_dotfiles = false,
           },
           follow_current_file = { enabled = true },
+          commands = {
+            scroll_tree_right = function(_state)
+              local v = vim.fn.winsaveview()
+              v.leftcol = v.leftcol + 6
+              vim.fn.winrestview(v)
+            end,
+            scroll_tree_left = function(_state)
+              local v = vim.fn.winsaveview()
+              v.leftcol = math.max(0, v.leftcol - 6)
+              vim.fn.winrestview(v)
+            end,
+            show_context_menu = function(state)
+              local mousepos = vim.fn.getmousepos()
+              if mousepos.line > 0 then
+                vim.api.nvim_win_set_cursor(state.winid, { mousepos.line, 0 })
+              end
+              local node = state.tree:get_node()
+              if not node or node.type == "message" then return end
+              local is_dir = node.type == "directory"
+
+              local Menu  = require("nui.menu")
+              local event = require("nui.utils.autocmd").event
+
+              local action_names = { "Open", "Duplicate", "Rename", "Delete" }
+              if is_dir then
+                table.insert(action_names, "New File Here")
+                table.insert(action_names, "New Folder Here")
+              end
+              table.insert(action_names, "Copy Path")
+
+              local lines = {}
+              for i, name in ipairs(action_names) do
+                table.insert(lines, Menu.item(i .. "  " .. name))
+              end
+
+              local function execute(name)
+                local fc = require("neo-tree.sources.filesystem.commands")
+                if name == "Open" then
+                  fc.open(state)
+                elseif name == "Duplicate" then
+                  local parent = vim.fn.fnamemodify(node.path, ":h")
+                  local _, fname = require("neo-tree.utils").split_path(node.path)
+                  require("neo-tree.sources.filesystem.lib.fs_actions").copy_node(
+                    node.path, parent .. "/copy_of_" .. fname,
+                    function() require("neo-tree.sources.manager").refresh("filesystem") end,
+                    parent
+                  )
+                elseif name == "Rename" then
+                  fc.rename(state)
+                elseif name == "Delete" then
+                  fc.delete(state)
+                elseif name == "New File Here" then
+                  fc.add(state)
+                elseif name == "New Folder Here" then
+                  fc.add_directory(state)
+                elseif name == "Copy Path" then
+                  vim.fn.setreg("+", node.path)
+                  vim.notify("Copied: " .. node.path)
+                end
+              end
+
+              local menu = Menu({
+                relative = "cursor",
+                position = { row = 1, col = 0 },
+                size     = { width = 22 },
+                border   = {
+                  style = "rounded",
+                  text  = { top = " " .. node.name .. " ", top_align = "left" },
+                },
+              }, {
+                lines  = lines,
+                keymap = {
+                  focus_next = { "j", "<Down>", "<Tab>" },
+                  focus_prev = { "k", "<Up>", "<S-Tab>" },
+                  close      = { "<Esc>", "<C-c>", "q" },
+                  submit     = { "<CR>", "<Space>" },
+                },
+                on_submit = function(item)
+                  execute(item.text:match("^%d+ +(.+)$") or item.text)
+                end,
+              })
+
+              menu:mount()
+
+              -- Number key shortcuts: press the item's number to fire instantly
+              for i, name in ipairs(action_names) do
+                menu:map("n", tostring(i), function()
+                  menu:unmount()
+                  execute(name)
+                end, { noremap = true, nowait = true })
+              end
+
+              -- Mouse click: fire immediately on the clicked item
+              local function handle_click()
+                local pos  = vim.fn.getmousepos()
+                local line = pos.line
+                if line >= 1 and line <= #action_names then
+                  menu:unmount()
+                  execute(action_names[line])
+                end
+              end
+              menu:map("n", "<LeftMouse>",   handle_click, { noremap = true, nowait = true })
+              menu:map("n", "<2-LeftMouse>", handle_click, { noremap = true, nowait = true })
+
+              -- Close and restore focus when the menu window loses focus
+              menu:on(event.BufLeave, function()
+                vim.schedule(function()
+                  pcall(menu.unmount, menu)
+                  if vim.api.nvim_win_is_valid(state.winid) then
+                    vim.api.nvim_set_current_win(state.winid)
+                  end
+                end)
+              end)
+            end,
+          },
+          window = {
+            mappings = {
+              ["<ScrollWheelRight>"] = "scroll_tree_right",
+              ["<ScrollWheelLeft>"]  = "scroll_tree_left",
+              ["<RightMouse>"]       = "show_context_menu",
+            },
+          },
         },
       })
 
