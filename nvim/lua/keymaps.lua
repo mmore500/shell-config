@@ -208,12 +208,22 @@ end, o)
 map("n", "<C-S-;>", "z=",      o)
 map("i", "<C-S-;>", "<C-o>z=", o)
 
+-- Ctrl+N → new empty buffer (VSCode: workbench.action.files.newUntitledFile)
+-- Only in normal mode; insert-mode <C-n> is reserved for completion.
+map("n", "<C-n>", "<cmd>enew<cr>", o)
+
 -- ── Sidebar (VSCode: ctrl+\ → toggle, alt+\ → focus/unfocus) ─────────────────
 map("n", "<C-\\>", "<cmd>Neotree toggle<cr>", o)
 map("n", "<M-\\>", "<cmd>Neotree focus<cr>",  o)
 
 -- ── Fuzzy finder (VSCode: ctrl+p → quick open, ctrl+f → find in file, ctrl+shift+f → find in project) ─
-map("n", "<C-p>",   "<cmd>Telescope find_files<cr>",                o)  -- quick open
+map("n", "<C-p>", function()                                            -- quick open
+  local in_git = vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null"):match("true")
+  local opts = in_git
+    and { hidden = true, find_command = { "git", "ls-files", "--cached", "--others", "--exclude-standard" } }
+    or  { hidden = true }
+  require("telescope.builtin").find_files(opts)
+end, o)
 map("n", "<C-f>",   "<cmd>Telescope current_buffer_fuzzy_find<cr>", o)  -- find in file (VSCode ctrl+f)
 map("n", "<C-S-f>", "<cmd>Telescope live_grep<cr>",                 o)  -- find in project
 map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",              o)  -- find in project (universal)
