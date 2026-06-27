@@ -43,6 +43,10 @@ opt.undodir = vim.fn.stdpath("data") .. "/undo"
 -- Mouse
 opt.mouse = "a"
 
+-- Cursor wraps to prev/next line when pressing left/right at line boundaries
+-- <,> = left/right arrows in normal/visual; [,] = left/right arrows in insert
+opt.whichwrap:append("<,>,[,]")
+
 -- UI
 opt.termguicolors = true
 opt.scrolloff = 8

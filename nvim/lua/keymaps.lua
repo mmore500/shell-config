@@ -2,6 +2,12 @@ local map = vim.keymap.set
 local o = { noremap = true, silent = true }
 
 -- ── File navigation ──────────────────────────────────────────────────────────
+-- Up/Down arrows → move by visual (soft-wrapped) line; j/k keep physical-line behavior
+map({ "n", "v" }, "<Up>",   "gk",       o)
+map({ "n", "v" }, "<Down>", "gj",       o)
+map("i",          "<Up>",   "<C-o>gk",  o)
+map("i",          "<Down>", "<C-o>gj",  o)
+
 -- Ctrl+Up/Down → top/bottom of file (VSCode: cursorTop / cursorBottom)
 map({ "n", "v" }, "<C-Up>",   "gg",      o)
 map({ "n", "v" }, "<C-Down>", "G",       o)
