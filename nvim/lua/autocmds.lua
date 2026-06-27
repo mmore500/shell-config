@@ -71,3 +71,36 @@ autocmd("TextYankPost", {
     vim.highlight.on_yank({ timeout = 200 })
   end,
 })
+
+-- After session restore, wipe any empty [No Name] buffers that linger after
+-- all plugins finish loading. "User VeryLazy" is Lazy.nvim's own signal that
+-- every deferred plugin has initialised — no timer needed.
+augroup("WipeNoName", { clear = true })
+autocmd("User", {
+  group    = "WipeNoName",
+  pattern  = "VeryLazy",
+  once     = true,
+  callback = function()
+    local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+    if #bufs <= 1 then return end   -- keep the sole buffer (fresh start, no session)
+    for _, b in ipairs(bufs) do
+      if vim.api.nvim_buf_get_name(b.bufnr) == "" then
+        local lines = vim.api.nvim_buf_get_lines(b.bufnr, 0, -1, false)
+        if #lines == 0 or (#lines == 1 and lines[1] == "") then
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_buf(win) == b.bufnr then
+              for _, other in ipairs(bufs) do
+                if other.bufnr ~= b.bufnr
+                    and vim.api.nvim_buf_get_name(other.bufnr) ~= "" then
+                  pcall(vim.api.nvim_win_set_buf, win, other.bufnr)
+                  break
+                end
+              end
+            end
+          end
+          pcall(vim.cmd, "bwipeout! " .. b.bufnr)
+        end
+      end
+    end
+  end,
+})

@@ -47,6 +47,10 @@ opt.mouse = "a"
 -- <,> = left/right arrows in normal/visual; [,] = left/right arrows in insert
 opt.whichwrap:append("<,>,[,]")
 
+-- Don't save blank/unnamed windows in sessions; prevents [No Name] from being
+-- baked into the session file and reappearing on every restore.
+opt.sessionoptions:remove("blank")
+
 -- UI
 opt.termguicolors = true
 opt.scrolloff = 8

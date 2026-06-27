@@ -130,13 +130,22 @@ map("n", "<C-w>", function()
   for _, b in ipairs(bufs) do
     if b.bufnr ~= cur then next_buf = b.bufnr; break end
   end
+  if not next_buf then
+    -- Last buffer: only land on a blank "No Name" if the buffer being
+    -- closed is itself empty; otherwise :quit closes the window cleanly.
+    local lines = vim.api.nvim_buf_get_lines(cur, 0, -1, false)
+    local is_empty = #lines <= 1 and (lines[1] == nil or lines[1] == "")
+    if is_empty then
+      vim.api.nvim_win_set_buf(0, vim.api.nvim_create_buf(true, false))
+      pcall(vim.cmd, "bdelete " .. cur)
+    else
+      pcall(vim.cmd, "quit")
+    end
+    return
+  end
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_get_buf(win) == cur then
-      if next_buf then
-        vim.api.nvim_win_set_buf(win, next_buf)
-      else
-        vim.api.nvim_win_set_buf(win, vim.api.nvim_create_buf(true, false))
-      end
+      vim.api.nvim_win_set_buf(win, next_buf)
     end
   end
   pcall(vim.cmd, "bdelete " .. cur)
