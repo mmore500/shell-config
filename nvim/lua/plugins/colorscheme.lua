@@ -15,6 +15,18 @@ return {
         set_dark_mode = function() apply("dark") end,
         set_light_mode = function() apply("light") end,
       })
+      -- Re-apply after all plugins load so bufferline (and others that hook
+      -- ColorScheme) pick up highlights that were set before they initialized.
+      vim.api.nvim_create_autocmd("VimEnter", {
+        once = true,
+        callback = function()
+          vim.schedule(function()
+            if vim.g.colors_name then
+              vim.cmd("colorscheme " .. vim.g.colors_name)
+            end
+          end)
+        end,
+      })
     end,
   },
 }
