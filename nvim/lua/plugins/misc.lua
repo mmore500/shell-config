@@ -67,7 +67,6 @@ return {
         auto_restore_enabled = true,
         -- Don't restore sessions for home/root/tmp (too broad)
         auto_session_suppress_dirs = { "~/", "/", "/tmp" },
-        -- Close Neotree before saving so it doesn't pollute the session
         pre_save_cmds = { "Neotree close" },
       })
     end,

@@ -47,13 +47,8 @@ return {
         window = { width = 30 },
         default_component_configs = {
           container = {
-            -- "fit_content" writes full filenames into the buffer without
-            -- truncation so horizontal scroll reveals the whole name.
             width = "fit_content",
-            -- Disable neo-tree's fade: with fit_content remaining_width is
-            -- always 0 so the fade would incorrectly apply to every item.
-            -- The viewport hard-clips long names; the › extends char signals
-            -- there is more content (see BufEnter autocmd below).
+            -- fit_content makes remaining_width always 0, so fade fires on every item; disable it
             enable_character_fade = false,
           },
         },
