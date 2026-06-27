@@ -14,6 +14,16 @@ map({ "n", "v" }, "<C-Right>", "$",      o)
 map("i",          "<C-Left>",  "<Home>", o)
 map("i",          "<C-Right>", "<End>",  o)
 
+-- Shift+Arrow → select by character (VSCode: cursorLeftSelect / cursorRightSelect etc.)
+map("n", "<S-Left>",  "vh", o)
+map("n", "<S-Right>", "vl", o)
+map("n", "<S-Up>",    "vk", o)
+map("n", "<S-Down>",  "vj", o)
+map("v", "<S-Left>",  "h",  o)
+map("v", "<S-Right>", "l",  o)
+map("v", "<S-Up>",    "k",  o)
+map("v", "<S-Down>",  "j",  o)
+
 -- Ctrl+Shift+Up/Down → select to top/bottom (VSCode: cursorTopSelect / cursorBottomSelect)
 map("n", "<C-S-Up>",   "vgg", o)
 map("n", "<C-S-Down>", "vG",  o)
@@ -21,8 +31,10 @@ map("v", "<C-S-Up>",   "gg",  o)
 map("v", "<C-S-Down>", "G",   o)
 
 -- Ctrl+Shift+Left/Right → select to line start/end (VSCode: cursorLineStartSelect / cursorEndSelect)
-map({ "n", "v" }, "<C-S-Left>",  "v^", o)
-map({ "n", "v" }, "<C-S-Right>", "v$", o)
+map("n", "<C-S-Left>",  "v^", o)
+map("n", "<C-S-Right>", "v$", o)
+map("v", "<C-S-Left>",  "^",  o)
+map("v", "<C-S-Right>", "$",  o)
 
 -- Alt+Left/Right → word left/right (VSCode: cursorWordStartLeft / cursorWordEndRight)
 map({ "n", "v" }, "<M-Left>",  "b",      o)
@@ -55,6 +67,18 @@ map("n", "<M-t><Up>",    "<C-w>k", o)
 map("n", "<M-t><Down>",  "<C-w>j", o)
 
 -- ── Editing ───────────────────────────────────────────────────────────────────
+-- Ctrl+X → cut (VSCode: cut); overrides vim's decrement-number
+-- clipboard=unnamedplus so the default register is already the system clipboard
+map("n", "<C-x>", "dd",      o)   -- cut line
+map("v", "<C-x>", "d",       o)   -- cut selection
+map("i", "<C-x>", "<C-o>dd", o)   -- cut line in insert mode
+
+-- Ctrl+V → paste (VSCode: paste); overrides vim's visual-block mode
+-- In visual mode, delete to black hole first so clipboard isn't clobbered
+map("n", "<C-v>", "p",      o)
+map("v", "<C-v>", '"_dp',   o)
+map("i", "<C-v>", '<C-r>"', o)
+
 -- Ctrl+Shift+X → delete line (VSCode: editor.action.deleteLines)
 map("n", "<C-S-x>", "dd",             o)
 map("i", "<C-S-x>", "<C-o>dd",        o)
@@ -104,13 +128,15 @@ map("n", "<M-t>", "xp", o)
 -- VSCode: ctrl+] → nextEditor, ctrl+shift+[ → previousEditor
 -- Note: <C-[> = Escape in terminals and cannot be remapped.
 -- <C-]> overrides tag-jump; LSP gd covers that instead.
-map("n", "<C-]>",   "<cmd>BufferLineCycleNext<cr>", o)
-map("n", "<C-}>",   "<cmd>BufferLineCycleNext<cr>", o)
-map("n", "<C-S-]>", "<cmd>BufferLineCycleNext<cr>", o)
-map("n", "<C-S-[>", "<cmd>BufferLineCyclePrev<cr>", o)
-map("n", "<C-{>",   "<cmd>BufferLineCyclePrev<cr>", o)
-map("n", "]b",      "<cmd>BufferLineCycleNext<cr>", o)
-map("n", "[b",      "<cmd>BufferLineCyclePrev<cr>", o)
+map("n", "<C-]>",      "<cmd>BufferLineCycleNext<cr>", o)
+map("n", "<C-}>",      "<cmd>BufferLineCycleNext<cr>", o)
+map("n", "<C-S-]>",   "<cmd>BufferLineCycleNext<cr>", o)
+map("n", "<C-S-[>",   "<cmd>BufferLineCyclePrev<cr>", o)
+map("n", "<C-{>",      "<cmd>BufferLineCyclePrev<cr>", o)
+map("n", "]b",         "<cmd>BufferLineCycleNext<cr>", o)
+map("n", "[b",         "<cmd>BufferLineCyclePrev<cr>", o)
+map("n", "<C-PageDown>", "<cmd>BufferLineCycleNext<cr>", o)
+map("n", "<C-PageUp>",   "<cmd>BufferLineCyclePrev<cr>", o)
 
 -- ── Splits (VSCode: ctrl+k direction → moveEditorToGroup) ─────────────────────
 -- <C-k> is window-up, so use <leader>k as the split prefix
