@@ -45,6 +45,18 @@ return {
       require("neo-tree").setup({
         close_if_last_window = true,
         window = { width = 30 },
+        default_component_configs = {
+          container = {
+            -- "fit_content" writes full filenames into the buffer without
+            -- truncation so horizontal scroll reveals the whole name.
+            width = "fit_content",
+            -- Disable neo-tree's fade: with fit_content remaining_width is
+            -- always 0 so the fade would incorrectly apply to every item.
+            -- The viewport hard-clips long names; the › extends char signals
+            -- there is more content (see BufEnter autocmd below).
+            enable_character_fade = false,
+          },
+        },
         filesystem = {
           filtered_items = {
             visible      = true,   -- show hidden files (like VSCode explorer.confirmDelete)
@@ -52,6 +64,23 @@ return {
           },
           follow_current_file = { enabled = true },
         },
+      })
+
+      -- Neo-tree forces `nolist` on every BufEnter (setup/init.lua:173).
+      -- Re-enable it after neo-tree's handler so the › extends character
+      -- shows at the viewport edge for lines that continue off-screen.
+      -- Use only extends/precedes — not space/tab dots — in the tree window.
+      vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
+          if vim.bo.filetype == "neo-tree" then
+            vim.schedule(function()
+              if vim.bo.filetype == "neo-tree" then
+                vim.opt_local.list = true
+                vim.opt_local.listchars = { extends = "›", precedes = "‹" }
+              end
+            end)
+          end
+        end,
       })
     end,
   },
