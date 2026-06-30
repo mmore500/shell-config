@@ -40,6 +40,7 @@ alias egrep='() { $(whence -p egrep) --color=auto $@ }'
 alias ccat='highlight -O ansi'
 alias rm='rm -v'
 alias clauded='claude --dangerously-skip-permissions'
+alias claudet='claude --permission-mode auto'
 
 # Directory management
 alias la='ls -a'
